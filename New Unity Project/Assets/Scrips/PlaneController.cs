@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class PlaneController : MonoBehaviour
 {
-
+    bool ready = true;
     [FormerlySerializedAs("Text")] public Text text;
 
     public Text success;
@@ -26,7 +27,6 @@ public class PlaneController : MonoBehaviour
     void Update()
     {
         _timer += Time.deltaTime;
-        
         float x = Input.GetAxis("Mouse X");
         float y = Input.GetAxis("Mouse Y");
         float z = Input.GetAxis("Mouse ScrollWheel");
@@ -47,7 +47,7 @@ public class PlaneController : MonoBehaviour
         
         if (_inputMethod == 0)
         {
-            input = new Vector3(x, y, z);
+            input = new Vector3(y,z,x);
         }
         else if (_inputMethod == 1)
         {
@@ -69,13 +69,40 @@ public class PlaneController : MonoBehaviour
             text.text = gameObjects.Length.ToString();
             _cnt = 0;
 
+            foreach (var go in GameObject.FindGameObjectsWithTag("Player"))
+            {
+                if (go.transform.position.y < -200)
+                {
+                    success.text = "실패";
+                    success.gameObject.SetActive(true);
+                    
+                    if (ready)
+                    {
+                        StartCoroutine("Example");
+                    }
+                }
+            }
             if (gameObjects.Length == 0)
             {
                 success.gameObject.SetActive(true);
                 text.gameObject.SetActive(false);
+                StartCoroutine("Example");
             }
         }
 
         _cnt++;
+    }
+    
+    
+    IEnumerator Example() 
+    {
+        ready=false;
+
+        print(Time.time);
+        yield return new WaitForSeconds(5);
+
+        SceneManager.LoadScene("Menu");
+        ready=true;
+
     }
 }
