@@ -15,6 +15,7 @@ public class MenuScript : MonoBehaviour
     public void Help()
     { 
         Menual.SetActive(true);
+        StartCoroutine("Example");
     }
  
     public void close()
@@ -23,7 +24,15 @@ public class MenuScript : MonoBehaviour
     }
     IEnumerator Example() {
         print(Time.time);
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(1);
+        Menual.SetActive(false);
+
         print(Time.time);
+    }
+
+    public void KingMode()
+    {
+        SceneManager.LoadScene("M2");
+        
     }
 }
